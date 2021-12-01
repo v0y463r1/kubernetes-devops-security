@@ -8,7 +8,7 @@ pipeline {
               archive 'target/*.jar' // teset
             }
         
-      
+      }
       stage('unit test') {
             steps {
               sh "mvn test"
