@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   stages {
-      stage('Build Artifact') {
+      stage('Build Artifact - Maven') {
             steps {
               sh "mvn clean package -DskipTests=true"
               archive 'target/*.jar' // test
@@ -20,7 +20,16 @@ pipeline {
             }
           }
       }
-    
+        stage('Mutation Tests - PIT') {
+      steps {
+        sh "mvn org.pitest:pitest-maven:mutationCoverage"
+      }
+      post {
+        always {
+          pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+        }
+      }
+    }
 
         stage('Docker Build and Push') {
           steps {
