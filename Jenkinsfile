@@ -20,7 +20,7 @@ pipeline {
             }
           }
       }
-
+/*
         stage('SonarQube - SAST') {
       steps {
         withSonarQubeEnv('SonarQube') {
@@ -33,7 +33,7 @@ pipeline {
         }
       }
     }
-
+*/
 
         stage('Docker Build and Push') {
           steps {
