@@ -35,10 +35,22 @@ pipeline {
       }
     }
 
-        stage('Vulnerability Scan - Docker ') {
+    //    stage('Vulnerability Scan - Docker ') {
+     // steps {
+      //  sh "mvn -X dependency-check:check"
+      //}
+     stage('Vulnerability Scan - Docker') {
       steps {
-        sh "mvn -X dependency-check:check"
+        parallel(
+          "Dependency Scan": {
+            sh "mvn dependency-check:check"
+          },
+          "Trivy Scan": {
+            sh "bash trivy-docker-image-scan.sh"
+          }
+         }
       }
+    }
       post {
         always {
           dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
@@ -65,13 +77,13 @@ pipeline {
           }
        }
     
-        stage('OWASP ZAP - DAST') {
-      steps {
-        withKubeConfig([credentialsId: 'kubeconfig']) {
-          sh 'bash zap.sh'
-        }
-      }
-    }
+   //     stage('OWASP ZAP - DAST') {
+    //  steps {
+     //   withKubeConfig([credentialsId: 'kubeconfig']) {
+      //    sh 'bash zap.sh'
+       // }
+      //}
+    //}
     
     }
 }
