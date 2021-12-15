@@ -2,12 +2,12 @@ pipeline {
   agent any
 
   stages {
+    
       stage('Build Artifact - Maven') {
             steps {
               sh "mvn clean package -DskipTests=true"
               archive 'target/*.jar' // test
             }
-        
       }
       stage('Unit Tests - JUnit and Jacoco') {
           steps {
@@ -41,21 +41,7 @@ pipeline {
       }
         } 
      
-    /*
-    
-        stage('Vulnerability Scan - Docker') {
-          steps {
-            parallel(
-              "Dependency Scan": {
-                sh "mvn dependency-check:check"
-              },
-              "Trivy Scan": {
-                sh "bash trivy-docker-image-scan.sh"
-              }
-            }
-          }
-        }
-*/
+
 /*    
       post {
         always {
@@ -82,5 +68,6 @@ pipeline {
             }
           }
        }
+          
     }
 }
