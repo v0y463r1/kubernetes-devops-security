@@ -35,27 +35,15 @@ pipeline {
       }
     }
 
-    //    stage('Vulnerability Scan - Docker ') {
-     // steps {
-      //  sh "mvn -X dependency-check:check"
-      //}
-     stage('Vulnerability Scan - Docker') {
+        stage('Vulnerability Scan - Docker ') {
       steps {
-        parallel(
-          "Dependency Scan": {
-            sh "mvn dependency-check:check"
-          },
-          "Trivy Scan": {
-            sh "bash trivy-docker-image-scan.sh"
-          }
-         }
+        sh "mvn -X dependency-check:check"
       }
-    }
-//      post {
-  //      always {
-   //       dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-    //    }
-     // }
+      post {
+        always {
+          dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+        }
+      }
     }
 
 
@@ -76,22 +64,5 @@ pipeline {
             }
           }
        }
-    
-   //     stage('OWASP ZAP - DAST') {
-    //  steps {
-     //   withKubeConfig([credentialsId: 'kubeconfig']) {
-      //    sh 'bash zap.sh'
-       // }
-      //}
-    //}
-    
     }
 }
-
-            post {
-    always {
-      junit 'target/surefire-reports/*.xml'
-      jacoco execPattern: 'target/jacoco.exec'
-      pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
-      dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-    }
